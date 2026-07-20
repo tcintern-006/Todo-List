@@ -6,168 +6,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Apple</title>
+    <title>Todo App</title>
 </head>
 
-<body>
+<style>
+  
+    
+</style>
 
-    <!-- Header -->
+<body>
     <header>
         <nav>
-            <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
-                <i class="fa-solid fa-bars" id="hamburgerIcon"></i>
-            </button>
-            <i class="fa-brands fa-apple fa-lg"></i>
-             <ul id="navMenu">
-                <li><a href="#">Store</a></li>
-                <li><a href="#">Mac</a></li>
-                <li><a href="#">iPad</a></li>
-                <li><a href="#">iPhone</a></li>
-                <li><a href="#">Watch</a></li>
-                <li><a href="#">Vision</a></li>
-                <li><a href="#">AirPods</a></li>
-                <li><a href="#">TV & Home</a></li>
-                <li><a href="#">Entertainment</a></li>
-                <li><a href="#">Accessories</a></li>
-                <li><a href="#">Support</a></li>
-            </ul>
-            
-            <div class="icons">
-                <i class="fas fa-search"></i>
-                <i class="fa-solid fa-bag-shopping"></i>
-            </div>
+            <i class="fa-solid fa-bars  bars"></i>
+            <h1>Todo's</h1>
+          <ul class="hidden">
+    <i class="fa-solid fa-x bars"></i>
+    <li class="nav-total">Total Tasks <span></span></li>
+    <li class="nav-completed">Task Completed <span></span></li>
+    <li class="nav-pending">Pending Task <span></span></li>
+</ul>
         </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-card">
-            <div class="text">
-                <h1>College, sorted.</h1>
-                <p>Get a gift card from $100 to $150* when you buy Mac or iPad with education savings</p>
-                <div class="buttons">
-                    <button class="blue-btn"><a href="#">Shop</a></button>
-
-                </div>
-            </div>
-
-            <div class="hero-image">
-                <img src="/Assets/hero_back_to_school_2026__cz07tzsg14sy_small.jpg" alt="iPhone Family">
-            </div>
-        </div>
-        <div class="hero-card">
-            <div class="text">
-                <h1>iPhone</h1>
-                <p>Meet the latest iPhone lineup.</p>
-                <div class="buttons">
-                    <button class="blue-btn"><a href="#">Learn more</a></button>
-                    <button class="white-btn"><a href="#">Shop iPhone</a></button>
-                </div>
-            </div>
-
-            <div class="hero-image">
-                <img src="/Assets/hero_iphone_family.jpg" alt="iPhone Family">
-            </div>
-        </div>
-        <div class="hero-card">
-            <div class="text">
-                <h1>MacBook Air</h1>
-                <p>Now supercharged by M5</p>
-                <div class="buttons">
-                    <button class="blue-btn"><a href="#">Learn more</a></button>
-                    <button class="white-btn"><a href="#">Buy</a></button>
-                </div>
-            </div>
-
-            <div class="hero-image">
-                <img src="/Assets/hero_macbook_air_m5__eb1idggd120y_large.jpg" alt="iPhone Family">
-            </div>
+    <section>
+        <div class="addition_bar">
+            <input type="text" placeholder="Enter Task" id="">
+            <button class="btn addbtn">ADD</button>
         </div>
     </section>
+    
 
-    <!-- Featured Products Section -->
-
-    <section class="feature-section">
-        <div class="feature-item">
-            <div id="feature-text1" class="feature-text">
-                <h1>iPad <span>air</span></h1>
-                <p>Now supercharged by M4.</p>
-                <div class="buttons">
-                    <button class="blue-btn"><a href="#">Learn more</a></button>
-                    <button class="white-btn"><a href="#">Buy</a></button>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="/Assets/hero_ipad_air_m4__gc1zddfs5tiu_large.jpg" alt="iPhone Family">
-            </div>
-        </div>
-        <div class="feature-item">
-            <div id="feature-text2" class="feature-text">
-                <h1>MacBook Pro</span></h1>
-                <p>Now with M5, M5 Pro, and M5 Max.</p>
-                <div class="buttons">
-                    <button class="blue-btn"><a href="#">Learn more</a></button>
-                    <button class="white-btn"><a href="#">Buy</a></button>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="/Assets/promo_macbook_featuresection.jpg" alt="iPhone Family">
-            </div>
-        </div>
-        <div class="feature-item">
-            <div id="feature-text3" class="feature-text">
-                <h1> Watch Series 11</h1>
-                <p>The ultimate way to watch you health</p>
-                <div class="buttons">
-                    <button class="blue-btn"><a href="#">Learn more</a></button>
-                    <button class="white-btn"><a href="#">Buy</a></button>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="/Assets/promo_apple_watch_feature_section.jpg" alt="iPhone Family">
-            </div>
-        </div>
-        <div class="feature-item">
-            <div id="feature-text4" class="feature-text">
-                <h1>iPad Pro</h1>
-                <p>Advanced AI performance and game-changing capabilities</p>
-                <div class="buttons">
-                    <button class="blue-btn"><a href="#">Learn more</a></button>
-                    <button class="white-btn"><a href="#">Buy</a></button>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="/Assets/promo_ipad_pro__feature_section.jpg" alt="iPhone Family">
-            </div>
-        </div>
-        <div class="feature-item">
-            <div id="feature-text5" class="feature-text">
-                <h1>Trade IN</h1>
-                <p>Get UP TO $195-$695 in credit when you trade in iPhone 13 or Higher</p>
-                <div class="buttons">
-                    <button class="blue-btn"><a href="#">Get you estimate</a></button>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="/Assets/promo_iphone_tradein__e4hrjxmgmf0i_large.jpg"" alt=" iPhone Family">
-            </div>
-        </div>
-        <div class="feature-item">
-            <div id="feature-text6" class="feature-text">
-                <h1>Card</h1>
-                <p>Get up to 3% Daily Cash back wit every purchase</p>
-                <div class="buttons">
-                    <button class="blue-btn"><a href="#">Learn more</a></button>
-                    <button class="white-btn"><a href="#">Apply</a></button>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="/Assets/promo_apple_card__feature_section.jpg" alt="iPhone Family">
-            </div>
-        </div>
+    <section class="editsection">
+        <ul class="task-container">
+          
+            
+        </ul>
     </section>
 
-     <script src="script.js"></script>
+
+    <section>
+      <div class="stats">
+    <h2 class="total btn stat-total">Total : <span>0</span></h2>
+    <h2 class="pending btn stat-pending">Pending : <span>0</span></h2>
+    <h2 class="completed btn stat-completed">Completed : <span>0</span></h2>
+</div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Todo's App. All rights reserved.</p>
+    </footer>
+
+
+    <script src="script.js"></script>
 </body>
 
 </html>
