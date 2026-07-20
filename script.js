@@ -2,7 +2,6 @@ let ul = document.querySelector("nav ul")
 let bars = document.querySelectorAll(".bars")
 
 bars.forEach((bar) => {
-
     bar.addEventListener('click', (dets) => {
         if (ul.classList.contains("hidden")) {
             ul.classList.remove('hidden')
@@ -12,29 +11,23 @@ bars.forEach((bar) => {
             ul.classList.add("hidden")
         }
     })
-
 })
-
-
-
 
 
 let input = document.querySelector("input");
 let btn = document.querySelector(".addbtn");
+let inputvalue = "";
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-let h2 = document.querySelector(".task h2");
-let p = document.querySelector(".task p");
+let completedTasks = JSON.parse(localStorage.getItem("completedTasks")) || [];
 let list = document.querySelector(".task-container")
-let li = document.querySelector(".task-cards")
-
 
 // Get input
 input.addEventListener("input", (dets) => {
     inputvalue = dets.target.value;
 })
 
+let totaltaskcount = JSON.parse(localStorage.getItem("totaltaskcount")) || 0;
 
-let totaltaskcount = JSON.parse(localStorage.getItem("totaltaskcount"));
 // add task to localStorage
 btn.addEventListener('click', (dets) => {
     if (inputvalue.trim() !== "") {
@@ -46,14 +39,13 @@ btn.addEventListener('click', (dets) => {
         tasks.push(task);
         localStorage.setItem('tasks', JSON.stringify(tasks));
         inputvalue = "";
-        input.textContent = "";
+        input.value = "";             
         totaltaskcount += 1;
         localStorage.setItem("totaltaskcount", totaltaskcount);
         getallTasks()
         countUpdater();
     }
 })
-
 
 
 // GET ALL TASK ON EVERY UPDATE
@@ -86,14 +78,11 @@ function getallTasks() {
 getallTasks();
 
 
-let dlt_Count = JSON.parse(localStorage.getItem("delete_Count"));
-let comp_Count = JSON.parse(localStorage.getItem("complete_count"));
+let dlt_Count = JSON.parse(localStorage.getItem("delete_count")) || 0;  
+let comp_Count = JSON.parse(localStorage.getItem("complete_count")) || 0;
 
 
-
-
-
-// DELETE TASK  Complete and update task
+// DELETE, COMPLETE, EDIT, SAVE
 list.addEventListener("click", (e) => {
     if (e.target.dataset.action === 'delete') {
         let card = e.target.closest(".task-cards");
@@ -106,16 +95,20 @@ list.addEventListener("click", (e) => {
         countUpdater();
     }
 
-
     if (e.target.dataset.action === 'complete') {
-
         let card = e.target.closest('.task-cards');
         let id = card.dataset.id;
-        tasks = tasks.filter((e) => e.id != id);
+
+        let task = tasks.find((t) => t.id == id);   
+        if (task) {
+            completedTasks.push(task);
+            localStorage.setItem("completedTasks", JSON.stringify(completedTasks));
+        }
+
+        tasks = tasks.filter((t) => t.id != id);
         localStorage.setItem("tasks", JSON.stringify(tasks));
         comp_Count += 1;
         localStorage.setItem("complete_count", comp_Count)
-        console.log(comp_Count);
         getallTasks()
         countUpdater();
     }
@@ -129,10 +122,10 @@ list.addEventListener("click", (e) => {
     if (e.target.dataset.action === 'save') {
         let card = e.target.closest(".task-cards");
         let id = card.dataset.id;
-        let input = card.querySelector(".edit-input");
+        let editInput = card.querySelector(".edit-input");
 
         let task = tasks.find((t) => t.id == id);
-        task.text = input.value;
+        task.text = editInput.value;
         localStorage.setItem("tasks", JSON.stringify(tasks));
         editingId = null;
         getallTasks();
@@ -157,3 +150,5 @@ function countUpdater() {
     statCompleted.textContent = comp_Count;
     statPending.textContent = tasks.length;
 }
+
+countUpdater(); 
