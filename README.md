@@ -1,100 +1,148 @@
-# To-Do App
+# To-Do List App — ES6+ Refactor
 
-A simple, responsive to-do list built with HTML, CSS, and vanilla JavaScript. No frameworks, no build tools — just the DOM and `localStorage`. Built as a revision exercise on JavaScript fundamentals: variables, functions, arrays/objects, loops, and conditionals.
+A simple browser-based to-do list app, refactored from a single-file script into a modular, ES6+ codebase as part of a Web Development internship task (Think and Code Pvt Ltd).
 
-## Features
+## 🎯 Project Goal
 
-- Add new tasks with a timestamp
-- Edit a task's text inline (click Edit, the text becomes an input, click Save)
-- Mark a task as completed
-- Delete a task
-- Tasks persist across page refreshes using `localStorage`
-- Live counters for total, completed, and pending tasks
-- Collapsible nav drawer for smaller screens
-- Responsive layout (phone / tablet / desktop breakpoints)
+The original version of this app was written as one large `script.js` file, using older JavaScript patterns (`function` keyword, string concatenation, direct localStorage calls scattered everywhere, and a single blob of logic mixing UI and data together).
 
-## Tech Stack
+This refactor rewrites the same functionality using **Modern JavaScript (ES6+)** features and **ES Modules**, with the goal of making the code cleaner, easier to debug, and easier to extend.
 
-- HTML5
-- CSS3 (custom properties, Flexbox, media queries)
-- Vanilla JavaScript (ES6+)
-- `localStorage` for persistence — no backend, no database
-
-No libraries or frameworks were used on purpose. The goal of this project was to revise core JS concepts, and pulling in something like React would have skipped past the parts I actually needed to practice: DOM manipulation, event handling, and array methods.
-
-## Project Structure
+## 📁 Project Structure
 
 ```
+todo-app/
 ├── index.html
-├── style.css
-├── script.js
-└── README.md
+├── css/
+│   └── style.css
+├── js/
+│   ├── main.js          # Entry point — wires everything together
+│   ├── taskManager.js   # Task data logic (add/delete/complete/edit)
+│   ├── domHandler.js    # Rendering tasks + updating counters on screen
+│   ├── storage.js       # localStorage read/write helpers
+│   └── nav.js           # Hamburger menu toggle logic
+└── assets/
+    └── icons/
 ```
 
-## How It Works
+## 🧩 Why Split Into Multiple Files? (Separation of Concerns)
 
-### Data model
+A common question when moving from one file to many is: **"doesn't this make the app heavier?"**
 
-Each task is stored as an object:
+It doesn't, in any way that matters. Splitting one large file into several smaller ones doesn't increase the total amount of code — the browser just fetches a few small files instead of one big one, which costs a negligible amount of time. In real production apps, bundlers (like Vite or Webpack) usually recombine everything anyway before deployment.
+
+The real reason to split files isn't performance — it's **maintainability**. This is a core software engineering principle called **separation of concerns**: each file should have exactly one job.
+
+| File | Responsibility |
+|---|---|
+| `storage.js` | Knows *only* about reading/writing localStorage. Doesn't know what a "task" is. |
+| `taskManager.js` | Knows *only* about task data — adding, deleting, completing, editing. Doesn't know about the DOM at all. |
+| `domHandler.js` | Knows *only* about rendering HTML and updating the screen. Doesn't know how tasks are stored. |
+| `nav.js` | Knows *only* about the hamburger menu toggle. Fully independent of tasks. |
+| `main.js` | The entry point. Doesn't contain logic itself — just imports the other modules and wires them together via event listeners. |
+
+### Real benefits experienced while building this:
+
+- **Bugs are easier to isolate.** During development, nearly every bug was traceable to a single file (e.g. a missing `return` in `main.js`, a mutation issue in `taskManager.js`) rather than being buried in one long script.
+- **Each file can be reasoned about on its own.** You don't need to understand rendering logic to fix a storage bug, or vice versa.
+- **Reusability.** `storage.js`'s `getItem`/`setItem` helpers don't know anything about tasks — they could be dropped into a completely different project as-is.
+- **Swappable internals.** If this app ever moved from `localStorage` to a real backend/database, only `storage.js` would need to change — no other file depends on *how* storage works, only *that* it works.
+- **This mirrors real-world codebases.** Professional JavaScript projects — and frameworks like React — are built around this exact idea: small, focused files/components rather than one giant script.
+
+## ✅ ES6+ Features Used
+
+### 1. Arrow Functions
+All functions across the project use arrow function syntax (`const fn = () => {}`) instead of the `function` keyword, including event listener callbacks.
 
 ```js
-{
-  id: 1721490812345,
-  text: "Buy groceries",
-  time: "3:45:12 PM"
-}
+export const toggleFunc = () => {
+  const bars = document.querySelectorAll(".bars");
+  bars.forEach((bar) => {
+    bar.addEventListener("click", () => {
+      ul.classList.toggle("hidden");
+      ul.classList.toggle("show");
+    });
+  });
+};
 ```
 
-`id` is generated with `Date.now()`. It's simple and good enough for a single-user, client-side app — no two tasks get created in the same millisecond in normal use, and it avoids pulling in a UUID library for something this small.
-
-### Rendering
-
-The whole task list is rebuilt on every change using `Array.prototype.map()` combined with `.join("")`, and written to the container in one shot via `innerHTML`. This was a deliberate choice over creating and appending individual DOM nodes with `createElement`, for two reasons:
-
-1. It's far less code, and keeps the render logic in one place.
-2. Since the entire list re-renders on every add/edit/delete, there's no need to track and update individual nodes — the array is always the single source of truth, and the DOM is just a reflection of it.
-
-The trade-off is that this approach touches the DOM more than a fine-grained update would, which matters at a much larger scale than a personal to-do list. For this project size, the simplicity was worth it.
-
-### Finding the right task: event delegation
-
-Instead of attaching a click listener to every Edit/Delete/Complete button individually, a single listener sits on the parent task list (`<ul class="task-container">`). Every click bubbles up to that one listener, which checks `e.target` (or its closest matching ancestor) to figure out what was clicked and which task it belongs to, using a `data-id` attribute placed on each task's `<li>`.
-
-This matters because the list re-renders from scratch on every change. Listeners attached directly to individual buttons would be destroyed and need re-attaching every time `innerHTML` is reset. One listener on the parent, set up once, keeps working no matter how many times the list is redrawn.
-
-### Editing a task
-
-Rather than opening a separate popup/modal, editing happens inline: clicking Edit swaps that task's `<h2>` for an `<input>` pre-filled with its current text, and swaps the Edit button for a Save button. A single `editingId` variable tracks which task (if any) is currently in edit mode, and the render function checks against it for every task on every re-render. Clicking Save reads the input's current value, updates that task's `text` field in the array, saves to `localStorage`, and resets `editingId` back to `null`.
-
-### Persistence
-
-`localStorage` only stores strings, so the task array is serialized with `JSON.stringify()` before saving and parsed back out with `JSON.parse()` on load:
+### 2. Destructuring
+Used throughout to pull values out of objects/DOM datasets cleanly instead of accessing properties one by one.
 
 ```js
-localStorage.setItem("tasks", JSON.stringify(tasks));
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+// Destructuring an object straight out of a .map() callback
+const { id, text, time } = task;
+
+// Destructuring a DOM element's dataset
+const { id } = card.dataset;
+
+// Destructuring directly in a function parameter
+export const countUpdater = ({ total, completed, pending }) => { ... };
 ```
 
-The `|| []` fallback matters on a first-ever visit, when `localStorage.getItem()` returns `null` — without it, the app would throw trying to call array methods on `null`.
+### 3. Spread & Rest Operators
+Used to update task objects **immutably** — instead of mutating an existing object directly, a new object is built with the updated field.
 
-## Known Limitations
-
-- No unique constraint beyond the timestamp-based `id` — collisions are theoretically possible but extremely unlikely in practice
-- Task text is inserted via template strings without escaping, so a task containing `"` could break the rendered markup
-- Filtering by All / Pending / Completed is on the roadmap but not yet implemented — currently, marking a task complete removes it rather than tagging it
-
-## Possible Improvements
-
-- Add a `status` field (`pending` / `completed`) instead of deleting on complete, to support filter tabs
-- Escape user input before inserting into `innerHTML`
-- Replace timestamp IDs with a small unique-id utility if this ever needs to scale beyond a single browser session
-
-## Running Locally
-
-Clone the repo and open `index.html` in a browser, or serve it with a local dev server (e.g. VS Code's Live Server extension) so relative paths resolve correctly.
-
-```bash
-git clone <repo-url>
-cd todo-app
-# open index.html, or run it through a local server
+```js
+export const editTaskText = (id, value) => {
+  Newtasks = Newtasks.map((t) =>
+    t.id == id ? { ...t, text: value } : t
+  );
+  setItem("tasks", Newtasks);
+  return Newtasks;
+};
 ```
+Here, `{ ...t }` copies every existing property of the task, and `text: value` overwrites just the one field that changed — the original task object is never directly modified.
+
+### 4. Template Literals
+Used to build HTML strings and replace old-style string concatenation (`'<li>' + text + '</li>'`).
+
+```js
+return `<li class="task-cards" data-id="${id}">
+  <div class="task">
+    <h2>${text}</h2>
+    <p>${time}</p>
+  </div>
+</li>`;
+```
+
+### 5. Modules (`import` / `export`)
+Each file exports only the functions other files need, and `main.js` imports them to wire the app together.
+
+```js
+// taskManager.js
+export const addTask = (text) => { ... };
+
+// main.js
+import { addTask } from "./taskManager.js";
+```
+
+> ⚠️ Note: `index.html` must load the entry script with `type="module"`, and the app must be served through a local server (e.g. VS Code's Live Server) — opening `index.html` directly via `file://` will block ES modules due to CORS restrictions.
+
+```html
+<script type="module" src="js/main.js"></script>
+```
+
+## 🛠️ Features
+
+- Add tasks with a timestamp
+- Edit task text in-place
+- Mark tasks as completed
+- Delete tasks
+- Live counters (total / completed / pending) shown in both the nav bar and stats section
+- Data persisted in `localStorage`, so tasks survive a page refresh
+
+## ▶️ Running the Project
+
+1. Clone the repository
+2. Open the project folder in VS Code
+3. Install and run the **Live Server** extension (or any local server) on `index.html`
+4. Do **not** open `index.html` directly by double-clicking — ES modules require a real server
+
+## 📚 What I Learned
+
+- The difference between mutation and immutability, and why `.map()` + spread is preferred over directly changing an object's properties
+- Why DOM logic and data logic should be kept in separate files
+- How `import`/`export` actually work in the browser, including the `type="module"` requirement
+- How closures let event listener callbacks keep access to variables from an outer function, even after that outer function has finished running
+- The difference between `||` and `??` when supplying fallback/default values
