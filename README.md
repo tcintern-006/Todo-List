@@ -21,9 +21,7 @@ todo-app/
 │   ├── domHandler.js    # Rendering tasks + updating counters on screen
 │   ├── storage.js       # localStorage read/write helpers
 │   └── nav.js           # Hamburger menu toggle logic
-└── assets/
-    └── icons/
-```
+
 
 ## 🧩 Why Split Into Multiple Files? (Separation of Concerns)
 
