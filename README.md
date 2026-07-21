@@ -22,6 +22,7 @@ todo-app/
 │   ├── storage.js       # localStorage read/write helpers
 │   └── nav.js           # Hamburger menu toggle logic
 
+```
 
 ## 🧩 Why Split Into Multiple Files? (Separation of Concerns)
 
